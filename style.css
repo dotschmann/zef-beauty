@@ -147,3 +147,41 @@ button.btn {
     color: #302420;
     font: inherit;
 }
+
+#enquiryForm {
+    max-width: 400px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+#enquiryForm input,
+#enquiryForm textarea,
+#enquiryForm select {
+    box-sizing: border-box;
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #703e4c;
+    border-radius: 6px;
+    background-color: #ffffff;
+    color: #302420;
+    font: inherit;
+}
+
+#enquiryForm textarea {
+    resize: vertical;
+}
+
+#enquiryForm input:focus-visible,
+#enquiryForm textarea:focus-visible,
+#enquiryForm select:focus-visible {
+    outline: 3px solid #703e4c;
+    outline-offset: 2px;
+}
+
+.btn:disabled {
+    background-color: #e4d8dc;
+    cursor: not-allowed;
+    color: #51424a;
+}
