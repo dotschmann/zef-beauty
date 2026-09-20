@@ -123,3 +123,27 @@ button.btn {
     font-weight: bold;
     cursor: pointer;
 }
+
+.service-link {
+    font-weight: bold;
+    color: #703e4c;
+    text-underline-offset: 4px;
+}
+
+#contact label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+}
+
+#servicesSelect {
+    box-sizing: border-box;
+    width: 100%;
+    max-width: 400px;
+    padding: 12px;
+    border: 1px solid #703e4c;
+    border-radius: 6px;
+    background-color: #ffffff;
+    color: #302420;
+    font: inherit;
+}
