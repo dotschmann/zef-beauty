@@ -81,9 +81,45 @@ nav a:hover {
 .service-item h3 {
     margin-top: 0;
 }
+
 @media (min-width: 768px) {
     .service-list {
         grid-template-columns: repeat(3, 1fr);
     }
 }
 
+.portfolio-gallery {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 24px;
+}
+
+.portfolio-item {
+    margin: 0;
+}
+
+.portfolio-item img {
+    display: block;
+    width: 100%;
+    aspect-ratio: 4/5;
+    object-fit: cover;
+    border-radius: 12px;
+}
+
+.portfolio-item figcaption {
+    padding-top: 12px;
+    font-size: 14px;
+}
+
+@media (min-width: 768px) {
+    .portfolio-gallery {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+button.btn {
+    border: none;
+    font:inherit;
+    font-weight: bold;
+    cursor: pointer;
+}
