@@ -7,7 +7,7 @@ storyButton.addEventListener('click', function () {
     if (isVisible) {
         aboutDetails.hidden = true;
         storyButton.setAttribute('aria-expanded', 'false');
-        storyButton.textContent = 'Read our story';
+        storyButton.textContent = 'Meet Zef Beauty';
     } else {
         aboutDetails.hidden = false;
         storyButton.setAttribute('aria-expanded', 'true');
