@@ -123,8 +123,8 @@
             <h2>Let's talk about your look</h2>
             <p>Which service are you interested in?</p>
 
-            <p id="formFeedback">
-                Enquires cannot be sent yet.
+            <p id="formNotice">
+                Practice form: entries can be checked, but nothing is sent or saved.
             </p>
 
             <form id="enquiryForm" aria-describedby="formFeedback">
@@ -181,9 +181,11 @@
 
                 <p>Fields marked with * are required.</p>
                 
-                <button type="submit" class="btn" disabled>
-                    Submit(not working yet)
+                <button type="submit" class="btn">
+                    Submit enquiry
                 </button>
+
+                <p id="formFeedback" role="status"></p>
             </form>
         </section>
     </main>    
