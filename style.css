@@ -217,3 +217,63 @@ button.btn {
     outline: 3px solid #703e4c;
     outline-offset: 4px;
 }
+
+.hero {
+    display: grid;
+    grid-template-columns: 1fr;
+    align-items: center;
+    gap:40px;
+}
+
+.hero-content {
+    min-width: 0;
+}
+
+.hero-eyebrow {
+    margin: 0 0 16px;
+    color: #703e4c;
+    font-weight: bold;
+    font-size: 14px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+}
+
+.hero h1 {
+    margin: 0 0 24px;
+    line-height: 1.2;
+    font-size: clamp(36px, 5vw, 64px);
+}
+
+.hero-description {
+    margin: 0 0 28px;
+    font-size: 18px;
+    max-width: 45ch;
+}
+
+.hero-actions {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.hero-secondary {
+    color: #703e4c;
+    font-weight: bold;
+    text-underline-offset: 4px;
+}
+
+.hero-image {
+    display: block;
+    width: 100%;
+    aspect-ratio: 4/5;
+    object-fit: cover;
+    border-radius: 16px;
+}
+
+@media (min-width: 900px) {
+    .hero {
+        grid-template-columns: 1.1fr 1fr;
+        gap: 56px;
+    }
+}
