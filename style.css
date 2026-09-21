@@ -185,3 +185,35 @@ button.btn {
     cursor: not-allowed;
     color: #51424a;
 }
+
+.business-contact {
+    margin:24px 0;
+    padding:24px;
+    border: 1px solid #eadbd5;
+    border-radius: 12px;
+    background-color: #ffffff;
+
+}
+
+.business-contact a {
+    color: #703e4c;
+    font-weight: bold;
+    text-underline-offset: 4px;
+}
+
+.social-links {
+    display: flex;
+    gap: 12px 24px;
+    list-style: none;
+    flex-wrap: wrap;
+    padding: 0;
+}
+
+.business-contact a:hover{
+    text-decoration-thickness: 2px;
+}
+
+.business-contact a:focus-visible {
+    outline: 3px solid #703e4c;
+    outline-offset: 4px;
+}
