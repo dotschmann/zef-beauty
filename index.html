@@ -44,7 +44,7 @@
 
             <img 
                 class="hero-image"
-                src="images/makeup-look-01.png"   
+                src="images/traditional-engagement-01.png"   
                 alt="Zef Beauty Hair and Makeup"
             >
         </section>
@@ -198,7 +198,7 @@
                 Practice form: entries can be checked, but nothing is sent or saved.
             </p>
 
-            <form id="enquiryForm" aria-describedby="formFeedback">
+            <form id="enquiryForm" aria-describedby="formNotice">
                 <div class="form-group">
                     <label for="customerName">Name:*</label>
                     <input 
@@ -221,7 +221,7 @@
 
                 <div class="form-group">
                     <label for="serviceSelect">Select a service:*</label>
-                    <select id="serviceSelect" name="serviceSelect">
+                    <select id="serviceSelect" name="serviceSelect" required>
                         <option value="">--Please choose an option--</option>
                         <option value="hair">Hair Styling</option>
                         <option value="makeup">Makeup Artistry</option>
@@ -235,7 +235,6 @@
                         type="date"
                         id="preferredDate"
                         name="preferred-date"
-                        required
                     >
                 </div>
 
