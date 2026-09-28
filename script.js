@@ -160,3 +160,68 @@ updateHeaderHeight();
 
 const headerObserver = new ResizeObserver(updateHeaderHeight);
 headerObserver.observe(siteHeader);
+
+
+const portfolioTrack = document.querySelector('#portfolioTrack');
+const portfolioPrevious = document.querySelector('#portfolioPrevious');
+const portfolioNext = document.querySelector('#portfolioNext');
+const carouselControls = document.querySelector('.carousel-controls');
+
+const carouselReducedMotion = window.matchMedia(
+    '(prefers-reduced-motion: reduce)'
+);
+
+function updatePortfolioButtons() {
+    const canScroll =
+        portfolioTrack.scrollWidth > portfolioTrack.clientWidth + 2;
+
+    // Both arrows stay available whenever there are more photos to show.
+    portfolioPrevious.disabled = !canScroll;
+    portfolioNext.disabled = !canScroll;
+}
+
+function movePortfolio(direction) {
+    const firstPhoto = portfolioTrack.querySelector('.portfolio-item');
+
+    if (!firstPhoto) {
+        return;
+    }
+
+    const gap =
+        parseFloat(getComputedStyle(portfolioTrack).columnGap) || 0;
+
+    const distance = firstPhoto.getBoundingClientRect().width + gap;
+    const maximumScroll =
+        portfolioTrack.scrollWidth - portfolioTrack.clientWidth;
+
+    const currentPosition = portfolioTrack.scrollLeft;
+    let nextPosition = currentPosition + direction * distance;
+
+    if (direction === 1 && currentPosition >= maximumScroll - 2) {
+        // Next at the end returns to the beginning.
+        nextPosition = 0;
+    } else if (direction === -1 && currentPosition <= 2) {
+        // Previous at the beginning returns to the end.
+        nextPosition = maximumScroll;
+    }
+
+    portfolioTrack.scrollTo({
+        left: Math.max(0, Math.min(nextPosition, maximumScroll)),
+        behavior: carouselReducedMotion.matches ? 'instant' : 'smooth'
+    });
+}
+
+portfolioPrevious.addEventListener('click', function () {
+    movePortfolio(-1);
+});
+
+portfolioNext.addEventListener('click', function () {
+    movePortfolio(1);
+});
+
+carouselControls.hidden = false;
+
+const portfolioObserver = new ResizeObserver(updatePortfolioButtons);
+
+portfolioObserver.observe(portfolioTrack);
+updatePortfolioButtons();
