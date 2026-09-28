@@ -161,31 +161,102 @@
         </section>
 
         <section id="portfolio">
-            <h2>Portfolio</h2>
-            <div class="portfolio-gallery">
-                <figure class="portfolio-item">
-                    <img 
-                    src="images/hairstyle-look-01.jpeg" 
-                    alt="Bridal Hair and Makeup"
-                    loading="lazy"
+            <div class="portfolio-heading">
+                <h2>Our work</h2>
+
+                <div
+                    class="carousel-controls"
+                    role="group"
+                    aria-label="Portfolio navigation"
+                    hidden
+                >
+                    <button
+                        type="button"
+                        class="carousel-button"
+                        id="portfolioPrevious"
+                        aria-label="Previous portfolio photo"
+                        aria-controls="portfolioTrack"
                     >
-                    <figcaption>Hairstyle Look</figcaption>
+                        <i class="bi bi-arrow-left" aria-hidden="true"></i>
+                    </button>
+
+                    <button
+                        type="button"
+                        class="carousel-button"
+                        id="portfolioNext"
+                        aria-label="Next portfolio photo"
+                        aria-controls="portfolioTrack"
+                    >
+                        <i class="bi bi-arrow-right" aria-hidden="true"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div
+                class="portfolio-gallery"
+                id="portfolioTrack"
+                role="region"
+                aria-label="Portfolio photos. Scroll horizontally to explore."
+                tabindex="0"
+            >
+                <figure class="portfolio-item">
+                    <img
+                        src="images/bridal-package-01.png"
+                        alt="Long straight hairstyle from Zef Beauty's portfolio"
+                        loading="lazy"
+                    >
+                    <figcaption>Wedding Guest</figcaption>
                 </figure>
                 <figure class="portfolio-item">
-                    <img 
-                    src="images/makeup-look-01.png" 
-                    alt="Makeup Look"
-                    loading="lazy"
+                    <img
+                        src="images/makeup-look-02.png"
+                        alt="Long straight hairstyle from Zef Beauty's portfolio"
+                        loading="lazy"
                     >
-                    <figcaption>Makeup Look</figcaption>
+                    <figcaption>Corporate Finish</figcaption>
+                </figure>
+                
+                <figure class="portfolio-item">
+                    <img
+                        src="images/makeup-look-03.png"
+                        alt="Long straight hairstyle from Zef Beauty's portfolio"
+                        loading="lazy"
+                    >
+                    <figcaption>Party Ready</figcaption>
                 </figure>
                 <figure class="portfolio-item">
-                    <img 
-                    src="images/bridal-package-01.png" 
-                    alt="Bridal Package"
-                    loading="lazy"
+                    <img
+                        src="images/makeup-look-04.png"
+                        alt="Long straight hairstyle from Zef Beauty's portfolio"
+                        loading="lazy"
                     >
-                    <figcaption>Bridal Package</figcaption>
+                    <figcaption>Birthday Girl</figcaption>
+                </figure>
+                <figure class="portfolio-item">
+                    <img
+                        src="images/makeup-look-01.png"
+                        alt="Makeup look paired with an orange dress"
+                        loading="lazy"
+                    >
+                    <figcaption>Bride`s Makeup</figcaption>
+                </figure>
+
+                <figure class="portfolio-item">
+                    <img
+                        src="images/bridal-package-01.png"
+                        alt="Bridal makeup with a tiara and lace outfit"
+                        loading="lazy"
+                    >
+                    <figcaption>Bridal beauty</figcaption>
+                </figure>
+
+                <figure class="portfolio-item">
+                    <img
+                        src="images/traditional-engagement-01.png"
+                        alt="Traditional engagement look with an orange fan"
+                        loading="lazy"
+                    >
+                    <figcaption>Traditional engagement</figcaption>
                 </figure>
             </div>
         </section>
@@ -193,7 +264,7 @@
         <section id="about" class="about-section">
             <div class="about-image">
                 <img
-                    src="images/bridal-package-01.png"
+                    src="images/traditional-engagement-02.png"
                     alt="Bridal makeup look from Zef Beauty's portfolio"
                     loading="lazy"
                 >
