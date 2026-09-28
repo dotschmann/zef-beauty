@@ -46,20 +46,90 @@ enquiryForm.addEventListener('input', function () {
     formFeedback.textContent = '';
 });
 
-enquiryForm.addEventListener('submit', function (event) {
+enquiryForm.addEventListener('submit', async function (event) {
     event.preventDefault();
-    validateForm();
 
-    if(!enquiryForm.reportValidity()) {
+    const submitButton = enquiryForm.querySelector(
+        'button[type="submit"]'
+    );
+
+    if (submitButton.disabled) {
         return;
     }
 
-    const customerName = customerNameInput.value.trim();
+    validateForm();
 
-    formFeedback.textContent = 
-    `Thank you, ${customerName}, for your enquiry! ` + 
-    "Nothing saved or sent, this is just a demo form.";
-});   
+    if (!enquiryForm.reportValidity()) {
+        return;
+    }
+
+    const enquiry = {
+        customerName: customerNameInput.value.trim(),
+        customerEmail: document.querySelector('#customerEmail').value.trim(),
+        serviceSelect: serviceSelect.value,
+        preferredDate: preferredDateInput.value,
+        message: document.querySelector('#message').value.trim()
+    };
+
+    const originalButtonText = submitButton.textContent;
+
+    submitButton.disabled = true;
+    submitButton.textContent = 'Sending…';
+    enquiryForm.setAttribute('aria-busy', 'true');
+    formFeedback.textContent = 'Sending your enquiry…';
+
+    try {
+        const response = await fetch('/api/enquiries', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(enquiry)
+        });
+
+        const result = await response.json();
+
+        if (!response.ok) {
+            if (result.fields) {
+                formFeedback.textContent =
+                    Object.values(result.fields).join(' ');
+
+                const firstFieldId = Object.keys(result.fields)[0];
+                const firstField = document.getElementById(firstFieldId);
+
+                if (firstField) {
+                    firstField.focus();
+                }
+            } else {
+                formFeedback.textContent =
+                    result.error || 'Your enquiry could not be saved.';
+            }
+
+            return;
+        }
+
+        if (result.saved !== true) {
+            throw new Error('The server did not confirm saving.');
+        }
+
+        formFeedback.textContent =
+            `Thank you, ${enquiry.customerName}. ` +
+            `Your enquiry has been saved. Reference: ${result.enquiryId}. ` +
+            'This is not a booking confirmation.';
+
+    } catch (error) {
+        formFeedback.textContent =
+            "We couldn't confirm whether your enquiry was saved. " +
+            'Please check with us before submitting again.';
+
+        console.error('Enquiry request failed:', error);
+
+    } finally {
+        submitButton.disabled = false;
+        submitButton.textContent = originalButtonText;
+        enquiryForm.removeAttribute('aria-busy');
+    }
+}); 
 
 function updateHeaderHeight() {
     const headerHeight = siteHeader.getBoundingClientRect().height;
