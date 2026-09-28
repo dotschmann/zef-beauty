@@ -1,0 +1,14 @@
+# Local Python environment
+.venv/
+
+# Generated Python files
+__pycache__/
+*.pyc
+
+# Local environment variables and secrets
+.env
+.env.*
+!.env.example
+
+# Test cache
+.pytest_cache/

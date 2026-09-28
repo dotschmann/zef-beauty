@@ -1,6 +1,3 @@
-const storyButton = document.querySelector('#readMoreBtn');
-const aboutDetails = document.querySelector('#aboutDetails');
-
 const serviceLinks = document.querySelectorAll('.service-link');
 const serviceSelect = document.querySelector('#serviceSelect');
 
@@ -9,20 +6,10 @@ const customerNameInput = document.querySelector('#customerName');
 const preferredDateInput = document.querySelector('#preferredDate');
 const formFeedback = document.querySelector('#formFeedback');
 
-
-storyButton.addEventListener('click', function () {
-    const isVisible = storyButton.getAttribute('aria-expanded') === 'true';
-
-    if (isVisible) {
-        aboutDetails.hidden = true;
-        storyButton.setAttribute('aria-expanded', 'false');
-        storyButton.textContent = 'Meet Zef Beauty';
-    } else {
-        aboutDetails.hidden = false;
-        storyButton.setAttribute('aria-expanded', 'true');
-        storyButton.textContent = 'Hide our story';
-    }
-});
+const siteHeader = document.querySelector('.site-header');
+const menuToggle = document.querySelector('.menu-toggle');
+const mainNavigation = document.querySelector('#mainNavigation');
+const mobileMenuQuery = window.matchMedia('(max-width: 1023px)');
 
 serviceLinks.forEach(function (link) {
     link.addEventListener('click', function () {
@@ -73,3 +60,103 @@ enquiryForm.addEventListener('submit', function (event) {
     `Thank you, ${customerName}, for your enquiry! ` + 
     "Nothing saved or sent, this is just a demo form.";
 });   
+
+function updateHeaderHeight() {
+    const headerHeight = siteHeader.getBoundingClientRect().height;
+
+    siteHeader.style.setProperty(
+        '--mobile-header-height',
+        `${headerHeight}px`
+    );
+
+    document.documentElement.style.scrollPaddingTop =
+        mobileMenuQuery.matches ? `${headerHeight + 16}px` : '';
+}
+
+function setMenuOpen(isOpen) {
+    const shouldOpen = mobileMenuQuery.matches && isOpen;
+
+    siteHeader.classList.toggle('menu-open', shouldOpen);
+    document.body.classList.toggle('menu-locked', shouldOpen);
+
+    menuToggle.setAttribute('aria-expanded', String(shouldOpen));
+    menuToggle.setAttribute(
+        'aria-label',
+        shouldOpen ? 'Close menu' : 'Open menu'
+    );
+
+    // Closed mobile links must not receive keyboard focus.
+    mainNavigation.inert =
+        mobileMenuQuery.matches && !shouldOpen;
+}
+
+menuToggle.addEventListener('click', function () {
+    const isOpen =
+        menuToggle.getAttribute('aria-expanded') === 'true';
+
+    setMenuOpen(!isOpen);
+});
+
+mainNavigation.querySelectorAll('a').forEach(function (link) {
+    link.addEventListener('click', function () {
+        if (mobileMenuQuery.matches) {
+            setMenuOpen(false);
+            menuToggle.focus({ preventScroll: true });
+        }
+    });
+});
+
+document.addEventListener('keydown', function (event) {
+    if (!siteHeader.classList.contains('menu-open')) {
+        return;
+    }
+
+    if (event.key === 'Escape') {
+        setMenuOpen(false);
+        menuToggle.focus();
+    }
+
+    // Keep keyboard navigation within the open menu and header.
+    if (event.key === 'Tab') {
+        const focusable = siteHeader.querySelectorAll(
+            'button:not([disabled]), a[href]'
+        );
+
+        const first = focusable[0];
+        const last = focusable[focusable.length - 1];
+
+        if (event.shiftKey && document.activeElement === first) {
+            event.preventDefault();
+            last.focus();
+        } else if (!event.shiftKey && document.activeElement === last) {
+            event.preventDefault();
+            first.focus();
+        }
+    }
+});
+
+
+let menuResizeTimer;
+
+window.addEventListener('resize', function () {
+    siteHeader.classList.add('menu-resizing');
+
+    clearTimeout(menuResizeTimer);
+
+    menuResizeTimer = setTimeout(function () {
+        siteHeader.classList.remove('menu-resizing');
+    }, 200);
+});
+
+mobileMenuQuery.addEventListener('change', function () {
+    siteHeader.classList.add('menu-resizing');
+    setMenuOpen(false);
+    updateHeaderHeight();
+});
+
+siteHeader.classList.add('menu-ready');
+setMenuOpen(false);
+updateHeaderHeight();
+
+const headerObserver = new ResizeObserver(updateHeaderHeight);
+headerObserver.observe(siteHeader);

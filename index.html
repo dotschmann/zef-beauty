@@ -5,48 +5,126 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Zef Beauty | Hair & Makeup</title>
     <meta name="description" content="Zef Beauty is a premier hair and makeup service provider, offering professional styling for weddings, events, and special occasions.">
+    <link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css"
+    >
     <link rel="stylesheet" href="style.css">
     <script src="script.js" defer></script>
 </head>
 
 <body>
-    <header>
-            
-        <a href="index.html">Zef Beauty</a>
-            
-        <nav aria-label="Main navigation">
-            <a href="#services">Services</a>
-            <a href="#portfolio">Portfolio</a>
-            <a href="#contact">Contact</a>
-        </nav>
-    </header>
+<header class="site-header">
+    <button
+        class="menu-toggle"
+        type="button"
+        aria-label="Open menu"
+        aria-expanded="false"
+        aria-controls="mainNavigation"
+    >
+        <span class="menu-line"></span>
+        <span class="menu-line"></span>
+        <span class="menu-line"></span>
+    </button>
+
+    <a href="index.html" class="brand">
+        <span class="brand-name">Zef Beauty</span>
+        <span class="brand-tagline">Hair & Makeup</span>
+    </a>
+
+    <nav id="mainNavigation" aria-label="Main navigation">
+        <div class="menu-links">
+            <a href="#services">
+                <span>Services</span>
+                <span class="menu-arrow" aria-hidden="true">→</span>
+            </a>
+
+            <a href="#portfolio">
+                <span>Our work</span>
+                <span class="menu-arrow" aria-hidden="true">→</span>
+            </a>
+
+            <a href="#about">
+                <span>About us</span>
+                <span class="menu-arrow" aria-hidden="true">→</span>
+            </a>
+
+            <a href="#contact">
+                <span>Contact</span>
+                <span class="menu-arrow" aria-hidden="true">→</span>
+            </a>
+        </div>
+
+        <div class="menu-contact">
+            <p class="menu-contact-title">Let's talk about your look</p>
+
+            <a
+                class="menu-whatsapp"
+                href="https://wa.me/233540628077"
+                target="_blank"
+                rel="noopener noreferrer"
+            >
+                <i class="bi bi-whatsapp" aria-hidden="true"></i>
+                <span>Chat on WhatsApp</span>
+            </a>
+
+            <p class="menu-follow">Follow our work</p>
+
+            <div class="menu-socials">
+                <a
+                    href="https://www.instagram.com/zefglam/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label="Zef Glam makeup on Instagram"
+                >
+                    <i class="bi bi-instagram" aria-hidden="true"></i>
+                    <span>Makeup</span>
+                </a>
+
+                <a
+                    href="https://www.instagram.com/zefhair/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label="Zef Hair on Instagram"
+                >
+                    <i class="bi bi-instagram" aria-hidden="true"></i>
+                    <span>Hair</span>
+                </a>
+            </div>
+        </div>
+    </nav>
+</header>
 
     <main>
         <section class="hero">
+            <div class="hero-photos" aria-hidden="true">
+                <img
+                    src="images/traditional-engagement-01.png"
+                    alt=""
+                >
+                <img
+                    src="images/makeup-look-01.png"
+                    alt=""
+                >
+            </div>
+
             <div class="hero-content">
                 <p class="hero-eyebrow">Zef Beauty · Hair & Makeup</p>
 
                 <h1>Your beauty, your way.</h1>
 
                 <p class="hero-description">
-                    Explore our hair and makeup services.
-                    Let's talk about what you have in mind 
-                    for your next event or special occasion.
+                    Hair and makeup for your special moments.
+                    Explore our work and share your vision with us.
                 </p>
 
                 <div class="hero-actions">
-                    <a href="#contact" class="btn">Enquire Now</a>
+                    <a href="#contact" class="btn">Enquire now</a>
                     <a href="#portfolio" class="hero-secondary">
                         Explore our work
                     </a>
                 </div>
             </div>
-
-            <img 
-                class="hero-image"
-                src="images/makeup-look-01.png"   
-                alt="Zef Beauty Hair and Makeup"
-            >
         </section>
 
         <section id="services">
@@ -112,157 +190,289 @@
             </div>
         </section>
 
-        <section id="about">
-            <h2>About Zef Beauty</h2>
-            <p>Get to know our story and what makes us unique.</p>
-            <button 
-                class="btn"
-                type="button"
-                id="readMoreBtn"
-                aria-expanded="false"
-                aria-controls="aboutDetails" 
-                
-            >
-            Meet Zef Beauty
-        </button>
-        <p id="aboutDetails" hidden>
-            Zef Beauty was founded with a passion for 
-            enhancing natural beauty 
-            through professional hair 
-            and makeup services. 
-            Our team of experienced 
-            stylists and 
-            makeup artists are dedicated 
-            to providing personalized services for every client, 
-            ensuring that you look and feel your best for any 
-            occasion.
-            </p>
-        
+        <section id="about" class="about-section">
+            <div class="about-image">
+                <img
+                    src="images/bridal-package-01.png"
+                    alt="Bridal makeup look from Zef Beauty's portfolio"
+                    loading="lazy"
+                >
+            </div>
+
+            <div class="about-copy">
+                <p class="section-eyebrow">Meet Zef Beauty</p>
+
+                <h2>Beauty with a personal touch.</h2>
+
+                <p>
+                    From hair styling to makeup, we help you create
+                    a look that feels like you.
+                </p>
+
+                <p>
+                    Explore our work, share your ideas, and get in touch
+                    to discuss your occasion.
+                </p>
+
+                <a href="#contact" class="btn">Let's talk</a>
+            </div>
         </section>
 
-        <section id="contact">
-            <h2>Let's talk about your look</h2>
-            <p>Which service are you interested in?</p>
-            <div class="business-contact">
+        <section id="contact" class="contact-section">
+            <div class="contact-info">
+                <p class="section-eyebrow">Get in touch</p>
+                <h2>Let's talk about your look.</h2>
                 <p>
-                    Want to  contact us directly?
-                    <a 
-                    href="https://wa.me/233540628077" 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    >
-                        chat with us on WhatsApp
-                    </a>
+                    Tell us about your occasion and the service
+                    you have in mind.
                 </p>
-                <p>Explore our work:</p>
-                <ul class="social-links">
-                    <li>
-                        <a 
-                        href="https://www.instagram.com/zefglam/" 
-                        target="_blank" 
-                        rel="noopener noreferrer"
-                        >
-                            Makeup on Instagram
-                        </a>
-                    </li>
-                    <li>
-                        <a 
-                        href="https://www.instagram.com/zefhair/" 
-                        target="_blank" 
-                        rel="noopener noreferrer"
-                        >
-                            Hair on Instagram
-                        </a>
-                    </li>
-                    <li>
-                        <a
-                        href="https://www.tiktok.com/@zefglam"
+
+                <div class="business-contact">
+                    <p>Prefer to contact us directly?</p>
+
+                    <a
+                        href="https://wa.me/233540628077"
                         target="_blank"
                         rel="noopener noreferrer"
-                        >
-                            Makeup on Tiktok
-                        </a>
-                    </li>
-                    <li>
-                        <a
-                        href="https://www.tiktok.com/@zefhair_"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        >
-                            Hair on Tiktok
-                        </a>        
-                    </li>
-                </ul>
-            </div>
-            <p id="formNotice">
-                Practice form: entries can be checked, but nothing is sent or saved.
-            </p>
-
-            <form id="enquiryForm" aria-describedby="formFeedback">
-                <div class="form-group">
-                    <label for="customerName">Name:*</label>
-                    <input 
-                    type="text" 
-                    id="customerName" 
-                    name="customerName" 
-                    autocomplete="name"
-                    required>
-                </div>
-
-                <div class="form-group"> 
-                    <label for="customerEmail">Email:*</label>
-                    <input 
-                    type="email" 
-                    id="customerEmail" 
-                    name="customerEmail" 
-                    autocomplete="email"
-                    required>
-                </div>
-
-                <div class="form-group">
-                    <label for="serviceSelect">Select a service:*</label>
-                    <select id="serviceSelect" name="serviceSelect">
-                        <option value="">--Please choose an option--</option>
-                        <option value="hair">Hair Styling</option>
-                        <option value="makeup">Makeup Artistry</option>
-                        <option value="bridal">Bridal Packages</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label for="preferred-date">Preferred Date (optional):</label>
-                    <input
-                        type="date"
-                        id="preferredDate"
-                        name="preferred-date"
-                        required
                     >
+                        Chat with us on WhatsApp
+                    </a>
+
+                    <p>Explore our work:</p>
+
+                    <ul class="social-links">
+                        <li>
+                            <a
+                                href="https://www.instagram.com/zefglam/"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                aria-label="Zef Glam makeup on Instagram"
+                            >
+                                <i class="bi bi-instagram" aria-hidden="true"></i>
+                                <span>Makeup</span>
+                            </a>
+                        </li>
+
+                        <li>
+                            <a
+                                href="https://www.instagram.com/zefhair/"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                aria-label="Zef Hair on Instagram"
+                            >
+                                <i class="bi bi-instagram" aria-hidden="true"></i>
+                                <span>Hair</span>
+                            </a>
+                        </li>
+
+                        <li>
+                            <a
+                                href="https://www.tiktok.com/@zefglam"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                aria-label="Zef Glam makeup on TikTok"
+                            >
+                                <i class="bi bi-tiktok" aria-hidden="true"></i>
+                                <span>Makeup</span>
+                            </a>
+                        </li>
+
+                        <li>
+                            <a
+                                href="https://www.tiktok.com/@zefhair_"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                aria-label="Zef Hair on TikTok"
+                            >
+                                <i class="bi bi-tiktok" aria-hidden="true"></i>
+                                <span>Hair</span>
+                            </a>
+                        </li>
+                    </ul>
                 </div>
+                <div class="business-location">
+                    <h3>Visit Zef Beauty</h3>
 
-                <div class="form-group">
-                    <label for="message">Message:</label>
-                    <textarea 
-                    id="message" 
-                    name="message" 
-                    rows="5"
-                    maxlength="2000"
-                    placeholder="Any specific requests or information you'd like to share?"
-                    ></textarea>     
+                    <iframe 
+                        class="location-map"
+                        title="Google Maps showing Zef Beauty in Haatso, Ghana"
+                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d515.6783204678978!2d-0.2085340519933333!3d5.68676495104373!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xfdf9d002a026bd9%3A0xb504204babecdf44!2sZef%20Beauty!5e0!3m2!1sen!2sde!4v1790600671265!5m2!1sen!2sde" 
+                        width="600" 
+                        height="450" 
+                        style="border:0;" 
+                        allowfullscreen="" 
+                        loading="lazy" 
+                        referrerpolicy="strict-origin-when-cross-origin">
+                    </iframe>
                 </div>
+            </div>
 
-                <p>Fields marked with * are required.</p>
-                
-                <button type="submit" class="btn">
-                    Submit enquiry
-                </button>
+            <div class="contact-form-panel">
+                <h3>Your enquiry</h3>
 
-                <p id="formFeedback" role="status"></p>
-            </form>
+                <p id="formNotice">
+                    Practice form: entries can be checked,
+                    but nothing is sent or saved.
+                </p>
+
+                <form id="enquiryForm" aria-describedby="formNotice">
+                    <div class="form-group">
+                        <label for="customerName">Name *</label>
+                        <input
+                            type="text"
+                            id="customerName"
+                            name="customerName"
+                            autocomplete="name"
+                            required
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label for="customerEmail">Email *</label>
+                        <input
+                            type="email"
+                            id="customerEmail"
+                            name="customerEmail"
+                            autocomplete="email"
+                            required
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label for="serviceSelect">Select a service *</label>
+                        <select
+                            id="serviceSelect"
+                            name="serviceSelect"
+                            required
+                        >
+                            <option value="">Please choose an option</option>
+                            <option value="hair">Hair Styling</option>
+                            <option value="makeup">Makeup Artistry</option>
+                            <option value="bridal">Bridal Packages</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="preferredDate">
+                            Preferred date (optional)
+                        </label>
+                        <input
+                            type="date"
+                            id="preferredDate"
+                            name="preferred-date"
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label for="message">Message (optional)</label>
+                        <textarea
+                            id="message"
+                            name="message"
+                            rows="5"
+                            maxlength="2000"
+                            placeholder="Tell us about your occasion and the look you have in mind."
+                        ></textarea>
+                    </div>
+
+                    <p>Fields marked with * are required.</p>
+
+                    <button type="submit" class="btn">
+                        Check enquiry
+                    </button>
+
+                    <p id="formFeedback" role="status"></p>
+                </form>
+            </div>
         </section>
     </main>    
 
-    <footer>
-        <p>Zef Beauty · Hair & Makeup</p>
-    </footer>
+<footer class="site-footer">
+    <div class="footer-main">
+        <div class="footer-brand">
+            <a href="index.html" class="footer-logo">Zef Beauty</a>
+            <p>Hair. Makeup. Your personal touch.</p>
+        </div>
+
+        <div>
+            <h2>Explore</h2>
+            <ul class="footer-links">
+                <li><a href="#services">Our services</a></li>
+                <li><a href="#portfolio">Our work</a></li>
+                <li><a href="#about">About us</a></li>
+            </ul>
+        </div>
+
+        <div>
+            <h2>Get in touch</h2>
+
+            <ul class="footer-links">
+                <li>
+                    <a href="https://wa.me/233540628077">
+                        <i class="bi bi-whatsapp" aria-hidden="true"></i>
+                        +233 54 062 8077
+                    </a>
+                </li>
+                <li>
+                    <a href="#contact">Contact information</a>
+                </li>
+            </ul>
+
+            <ul class="social-links">
+                <li>
+                    <a
+                        href="https://www.instagram.com/zefglam/"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label="Zef Glam makeup on Instagram"
+                    >
+                        <i class="bi bi-instagram" aria-hidden="true"></i>
+                        <span>Makeup</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a
+                        href="https://www.instagram.com/zefhair/"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label="Zef Hair on Instagram"
+                    >
+                        <i class="bi bi-instagram" aria-hidden="true"></i>
+                        <span>Hair</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a
+                        href="https://www.tiktok.com/@zefglam"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label="Zef Glam makeup on TikTok"
+                    >
+                        <i class="bi bi-tiktok" aria-hidden="true"></i>
+                        <span>Makeup</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a
+                        href="https://www.tiktok.com/@zefhair_"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label="Zef Hair on TikTok"
+                    >
+                        <i class="bi bi-tiktok" aria-hidden="true"></i>
+                        <span>Hair</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="footer-bottom">
+        <p>© 2026 Zef Beauty</p>
+        <p>Hair & Makeup</p>
+    </div>
+</footer>
 </body>
 </html>
