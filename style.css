@@ -260,6 +260,23 @@ main > .hero {
     border-radius: 0;
 }
 
+/* Section backgrounds */
+#services {
+    background-color: var(--color-surface);
+}
+
+#portfolio {
+    background-color: #d0ad91;
+}
+
+#portfolio h2,
+#portfolio figcaption {
+    color: var(--color-text);
+}
+
+#contact {
+    background-color: #f7f3ef;
+}
 
 /* Services */
 .service-list {
