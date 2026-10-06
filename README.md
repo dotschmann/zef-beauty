@@ -6,14 +6,13 @@ This is also a practical software engineering project: building an authentic bus
 
 ## Project status
 
-**In development.** The frontend and backend currently live on different branches:
+**In development.** The frontend, Flask enquiry API, SQLite storage,
+automated tests and GitHub Actions workflow are integrated into `main`.
 
-| Branch | What is available |
-| --- | --- |
-| [`main`](https://github.com/dotschmann/zef-beauty/tree/main) | Responsive website, portfolio carousel, contact links, and a demo enquiry form. The form does **not** send or save entries. |
-| [`feature/enquiry-api`](https://github.com/dotschmann/zef-beauty/tree/feature/enquiry-api) | Website served by Flask, with a connected enquiry form, server-side validation, and local SQLite storage. |
+Docker support is being added on `chore/docker-setup`.
 
-The backend instructions below apply to `feature/enquiry-api`. Saving an enquiry does **not** confirm a booking or send an email or WhatsApp notification.
+Saving an enquiry does not confirm a booking or send an email
+or WhatsApp notification.
 
 ## Features
 
@@ -68,12 +67,6 @@ This previews the website and its demo form. An internet connection is needed fo
 
 ## Run the website with the backend
 
-Start from the cloned repository and switch to the backend branch:
-
-```powershell
-git switch feature/enquiry-api
-```
-
 ### Windows PowerShell
 
 ```powershell
@@ -116,8 +109,6 @@ Run `ipconfig` on Windows and find the Wi-Fi adapter's IPv4 address. On the phon
 Keep the computer awake and Flask running. If Windows Firewall prompts, allow Python on the trusted private network. Enquiries submitted from the phone are stored on the computer running Flask.
 
 ## Enquiry API
-
-Available on `feature/enquiry-api`:
 
 | Method | Endpoint | Purpose |
 | --- | --- | --- |

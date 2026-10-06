@@ -1,0 +1,10 @@
+services:
+  web:
+    build: .
+    ports:
+      - "127.0.0.1:8000:8000"
+    volumes:
+      - enquiry-data:/app/instance
+
+volumes:
+  enquiry-data:
