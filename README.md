@@ -215,12 +215,40 @@ These checks can be repeated after changes:
 - Check that blank required fields, unsupported services, malformed email addresses, and past dates are rejected.
 - Confirm that an empty optional date and message are accepted.
 
-Automated tests and CI have not been added yet. Manual checks do not establish production readiness or full accessibility compliance.
+## Automated tests
+
+The enquiry API has 10 automated test cases covering:
+
+- Saving a valid enquiry and returning its database reference.
+- Accepting empty optional date and message fields.
+- Rejecting blank names, malformed email addresses, unsupported services, and past dates.
+- Rejecting missing required fields.
+- Confirming rejected enquiries do not create database records.
+
+Each test uses a separate temporary SQLite database.
+
+Install the development dependencies and run the tests on Windows:
+
+```powershell
+.\.venv\Scripts\python.exe -m pip install -r requirements-dev.txt
+.\.venv\Scripts\python.exe -m pytest -v
+```
+
+On macOS or Linux:
+
+```bash
+.venv/bin/python -m pip install -r requirements-dev.txt
+.venv/bin/python -m pytest -v
+```
+
+GitHub Actions runs these tests on pushes and pull requests.
+The workflow is defined in `.github/workflows/tests.yml`.
+
+These tests cover the enquiry API and database behaviour.
+They do not test the browser layout or establish production readiness.
 
 ## Next steps
 
-- Add automated API and database tests using a separate test database.
-- Run tests automatically with GitHub Actions.
 - Add a secure way for the business to review enquiries.
 - Implement notifications and improve duplicate-submission handling.
 - Add abuse protection, production configuration, and database backup arrangements.
@@ -230,7 +258,7 @@ Automated tests and CI have not been added yet. Manual checks do not establish p
 
 The implemented work provides practical examples of responsive frontend development, DOM events, asynchronous requests, HTTP/JSON APIs, server-side validation, SQL persistence, and Git branch workflows.
 
-Testing, CI/CD, containerisation, and deployment are planned learning areas, not completed features.
+Automated integration testing and continuous integration are now implemented. Containerisation and deployment remain planned learning areas.
 
 ## Business links
 
