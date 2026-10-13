@@ -1,4 +1,4 @@
-name: Backend tests
+name: Backend and Docker checks
 
 on:
   push:
@@ -29,3 +29,35 @@ jobs:
 
       - name: Run tests
         run: python -m pytest -v
+
+  docker:
+    name: Docker startup check
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Build and start the container
+        run: docker compose up --build -d
+
+      - name: Check the health endpoint
+        run: |
+          curl --fail --silent --show-error \
+            --retry 15 \
+            --retry-all-errors \
+            --retry-delay 2 \
+            --retry-max-time 60 \
+            --max-time 5 \
+            http://127.0.0.1:8000/api/health
+
+      - name: Show container logs if a check fails
+        if: failure()
+        run: docker compose logs --no-color --tail=100
+
+      - name: Clean up the test environment
+        if: always()
+        run: docker compose down --volumes --remove-orphans
