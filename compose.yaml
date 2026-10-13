@@ -3,6 +3,10 @@ services:
     build: .
     ports:
       - "127.0.0.1:8000:8000"
+    environment:
+      ZEF_SECRET_KEY: "${ZEF_SECRET_KEY:-}"
+      ZEF_ADMIN_PASSWORD_HASH: "${ZEF_ADMIN_PASSWORD_HASH:-}"
+      ZEF_COOKIE_SECURE: "${ZEF_COOKIE_SECURE:-false}"
     volumes:
       - enquiry-data:/app/instance
 
