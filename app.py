@@ -1,13 +1,38 @@
+import os
 import re
 import sqlite3
+import secrets
 from contextlib import closing
-from datetime import date
+from datetime import date, timedelta
 from pathlib import Path
+from dotenv import load_dotenv
 
-from flask import Flask, request, send_from_directory, abort
+from flask import (
+    Flask,
+    request,
+    send_from_directory,
+    abort,
+    render_template,
+    redirect,
+    url_for,
+    session,
+)
+from werkzeug.security import check_password_hash
+
+load_dotenv(Path(__file__).resolve().parent / ".env")
 
 app = Flask(__name__)
-
+app.config.update(
+    SECRET_KEY=os.environ.get("ZEF_SECRET_KEY"),
+    ADMIN_PASSWORD_HASH=os.environ.get("ZEF_ADMIN_PASSWORD_HASH"),
+    SESSION_COOKIE_HTTPONLY=True,
+    SESSION_COOKIE_SAMESITE="Lax",
+    SESSION_COOKIE_SECURE=(
+        os.environ.get("ZEF_COOKIE_SECURE", "false").lower() == "true"
+    ),
+    PERMANENT_SESSION_LIFETIME=timedelta(minutes=30),
+    SESSION_REFRESH_EACH_REQUEST=False,
+)
 
 DATABASE_PATH = Path(app.instance_path) / "zef-beauty.sqlite3"
 
@@ -192,3 +217,166 @@ def create_enquiry():
         "saved": True,
         "enquiryId": enquiry_id
     }, 201
+
+# Admin authentication
+
+def is_admin_request():
+    return request.path == "/admin" or request.path.startswith("/admin/")
+
+
+def admin_csrf_token():
+    if "admin_csrf_token" not in session:
+        session["admin_csrf_token"] = secrets.token_urlsafe(32)
+
+    return session["admin_csrf_token"]
+
+
+@app.before_request
+def protect_admin_routes():
+    if not is_admin_request():
+        return
+
+    # Keep admin access disabled if credentials are missing.
+    if not (
+        app.config["SECRET_KEY"]
+        and app.config["ADMIN_PASSWORD_HASH"]
+    ):
+        abort(503, description="Admin access is not configured.")
+
+    # Limit the size of admin form submissions.
+    request.max_content_length = 16 * 1024
+
+    # Every admin route except login requires authentication.
+    if (
+        request.endpoint != "admin_login"
+        and session.get("admin_authenticated") is not True
+    ):
+        return redirect(url_for("admin_login"))
+
+    # Check the form token on requests that change state.
+    if request.method in {"POST", "PUT", "PATCH", "DELETE"}:
+        expected_token = session.get("admin_csrf_token", "")
+        submitted_token = request.form.get("csrf_token", "")
+
+        if not expected_token or not secrets.compare_digest(
+            expected_token.encode("utf-8"),
+            submitted_token.encode("utf-8"),
+        ):
+            abort(
+                400,
+                description="The form expired or is invalid. Reload and try again.",
+            )
+
+
+@app.after_request
+def set_admin_response_headers(response):
+    if is_admin_request():
+        response.headers["Cache-Control"] = "no-store"
+        response.headers["X-Frame-Options"] = "DENY"
+        response.headers["X-Content-Type-Options"] = "nosniff"
+
+    return response
+
+
+@app.route("/admin/login", methods=["GET", "POST"])
+def admin_login():
+    if session.get("admin_authenticated") is True:
+        return redirect(url_for("admin_home"))
+
+    error = None
+    status_code = 200
+
+    if request.method == "POST":
+        password = request.form.get("password", "")
+
+        if (
+            0 < len(password) <= 1024
+            and check_password_hash(
+                app.config["ADMIN_PASSWORD_HASH"],
+                password,
+            )
+        ):
+            # Replace the pre-login session with a fresh login state.
+            session.clear()
+            session.permanent = True
+            session["admin_authenticated"] = True
+
+            return redirect(url_for("admin_home"))
+
+        error = "Incorrect password. Please try again."
+        status_code = 401
+
+    return render_template(
+        "admin.html",
+        authenticated=False,
+        csrf_token=admin_csrf_token(),
+        error=error,
+    ), status_code
+
+
+@app.get("/admin")
+def admin_home():
+    try:
+        page = int(request.args.get("page", "1"))
+    except ValueError:
+        abort(400, description="Invalid page number.")
+
+    if page < 1:
+        abort(400, description="Invalid page number.")
+
+    per_page = 20
+
+    try:
+        with closing(sqlite3.connect(DATABASE_PATH)) as connection:
+            connection.row_factory = sqlite3.Row
+
+            total = connection.execute(
+                "SELECT COUNT(*) FROM enquiries"
+            ).fetchone()[0]
+
+            total_pages = max(1, (total + per_page - 1) // per_page)
+
+            if page > total_pages:
+                abort(404, description="This page does not exist.")
+
+            enquiries = connection.execute(
+                """
+                SELECT
+                    id,
+                    customer_name,
+                    customer_email,
+                    service,
+                    preferred_date,
+                    message,
+                    created_at
+                FROM enquiries
+                ORDER BY id DESC
+                LIMIT ? OFFSET ?
+                """,
+                (per_page, (page - 1) * per_page),
+            ).fetchall()
+
+    except sqlite3.Error:
+        app.logger.exception("Could not load admin enquiries.")
+        abort(503, description="Enquiries are temporarily unavailable.")
+
+    return render_template(
+        "admin.html",
+        authenticated=True,
+        csrf_token=admin_csrf_token(),
+        enquiries=enquiries,
+        total=total,
+        page=page,
+        total_pages=total_pages,
+        service_names={
+            "hair": "Hair Styling",
+            "makeup": "Makeup Artistry",
+            "bridal": "Bridal Packages",
+        },
+    )
+
+
+@app.post("/admin/logout")
+def admin_logout():
+    session.clear()
+    return redirect(url_for("admin_login"))

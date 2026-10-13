@@ -16,6 +16,7 @@ RUN groupadd --gid 10001 appuser \
 
 COPY app.py index.html style.css script.js ./
 COPY images/ ./images/
+COPY templates/ ./templates/
 
 USER appuser
 

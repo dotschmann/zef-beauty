@@ -260,3 +260,69 @@ Automated integration testing and continuous integration are now implemented. Co
 - [Hair on TikTok](https://www.tiktok.com/@zefhair_)
 
 **Location:** Haatso, Ghana.
+
+## Admin dashboard
+
+The admin dashboard lets the business owner view saved enquiries.
+
+Features:
+- Password-based login using a stored password hash.
+- Session-based access with a configured 30-minute lifetime.
+- CSRF checks for login and logout.
+- Enquiries displayed newest first, with 20 per page.
+- Expandable customer messages.
+- Logout and access protection.
+- Admin responses use `Cache-Control: no-store`.
+
+### Configuration
+
+The application reads these environment variables:
+
+| Variable | Purpose |
+| --- | --- |
+| `ZEF_SECRET_KEY` | Random secret used to sign session cookies |
+| `ZEF_ADMIN_PASSWORD_HASH` | Password hash generated with Werkzeug |
+| `ZEF_COOKIE_SECURE` | Set to `false` for local HTTP; `true` when served over HTTPS |
+
+For local development, settings can be stored in `.env` beside `app.py`.
+See `.env.example` for the variable names. Its blank values must be
+configured before admin access works.
+
+Never commit `.env`, real passwords, password hashes or session secrets.
+If the secret or password hash is missing, admin routes return HTTP 503.
+Public website and health routes remain available.
+
+Docker Compose passes the settings into the container at startup.
+The `.env` file is excluded from the Docker image.
+
+### Local addresses
+
+- Flask website: http://127.0.0.1:5000/
+- Flask admin: http://127.0.0.1:5000/admin
+- Docker website: http://127.0.0.1:8000/
+- Docker admin: http://127.0.0.1:8000/admin
+
+Flask and Docker use separate local databases. Docker stores enquiries
+in the persistent `enquiry-data` volume.
+
+### Tests
+
+Run the complete test suite on Windows:
+
+```powershell
+.\.venv\Scripts\python.exe -m pytest -v
+```
+
+The suite currently contains 22 cases covering enquiry validation and
+storage, admin access, login/logout, CSRF checks, missing configuration,
+HTML escaping and pagination.
+
+Tests use temporary databases and test credentials.
+
+### Current limitations
+
+This admin feature has been tested locally. Login-attempt limiting and
+HTTPS deployment configuration are still required before public use.
+
+Viewing or saving an enquiry does not confirm a booking or send an
+email or WhatsApp notification.
