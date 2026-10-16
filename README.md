@@ -313,16 +313,32 @@ Run the complete test suite on Windows:
 .\.venv\Scripts\python.exe -m pytest -v
 ```
 
-The suite currently contains 22 cases covering enquiry validation and
+The suite currently contains 27 cases covering enquiry validation and
 storage, admin access, login/logout, CSRF checks, missing configuration,
 HTML escaping and pagination.
 
 Tests use temporary databases and test credentials.
 
+### Login-attempt limiting
+
+Admin login allows five submissions per connecting IP address during
+a 15-minute window starting with the first attempt. Both successful
+and unsuccessful password submissions count.
+
+Further submissions receive HTTP 429 with a Retry-After header.
+Blocked submissions do not extend the waiting period.
+
+Counters are stored in SQLite and survive container recreation when
+the database volume is retained. Opening another browser does not
+reset the limit.
+
+Automated tests cover blocking, expiry, separate IP limits, new browser
+sessions and attempts to bypass the limit using forwarded headers.
+
 ### Current limitations
 
-This admin feature has been tested locally. Login-attempt limiting and
-HTTPS deployment configuration are still required before public use.
+This admin feature has been tested locally. Before public deployment, configure HTTPS, production secrets, backups and trusted-proxy handling for client IP addresses. IP-based limiting
+alone does not prevent password guessing distributed across many IPs.
 
 Viewing or saving an enquiry does not confirm a booking or send an
 email or WhatsApp notification.

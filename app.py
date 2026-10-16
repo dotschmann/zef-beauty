@@ -6,6 +6,8 @@ from contextlib import closing
 from datetime import date, timedelta
 from pathlib import Path
 from dotenv import load_dotenv
+import hmac
+from time import time
 
 from flask import (
     Flask,
@@ -36,6 +38,8 @@ app.config.update(
 
 DATABASE_PATH = Path(app.instance_path) / "zef-beauty.sqlite3"
 
+LOGIN_LIMIT = 5
+LOGIN_WINDOW_SECONDS = 15 * 60
 
 @app.cli.command("init-db")
 def init_db_command():
@@ -56,8 +60,84 @@ def init_db_command():
                 )
             """)
 
-    print("Enquiry database is ready.")
+            connection.execute("""
+                CREATE TABLE IF NOT EXISTS login_rate_limits (
+                    client_key TEXT PRIMARY KEY NOT NULL,
+                    attempt_count INTEGER NOT NULL
+                        CHECK (attempt_count >= 0),
+                    expires_at INTEGER NOT NULL
+                )
+            """)
 
+            connection.execute("""
+                CREATE INDEX IF NOT EXISTS
+                    idx_login_rate_limits_expires_at
+                ON login_rate_limits (expires_at)
+            """)
+
+    print("Database tables are ready.")
+
+# Admin authentication
+def login_client_key():
+    address = request.remote_addr or "unknown"
+
+    return hmac.new(
+        app.config["SECRET_KEY"].encode("utf-8"),
+        f"admin-login:{address}".encode("utf-8"),
+        "sha256",
+    ).hexdigest()
+
+
+def reserve_login_attempt(client_key):
+    """Return 0 if allowed, otherwise seconds until another attempt."""
+
+    with closing(sqlite3.connect(DATABASE_PATH)) as connection:
+        with connection:
+            # Keep the check and counter update in one transaction.
+            connection.execute("BEGIN IMMEDIATE")
+
+            now = int(time())
+
+            connection.execute(
+                "DELETE FROM login_rate_limits WHERE expires_at <= ?",
+                (now,),
+            )
+
+            row = connection.execute(
+                """
+                SELECT attempt_count, expires_at
+                FROM login_rate_limits
+                WHERE client_key = ?
+                """,
+                (client_key,),
+            ).fetchone()
+
+            if row is not None:
+                attempt_count, expires_at = row
+
+                if attempt_count >= LOGIN_LIMIT:
+                    return max(1, expires_at - now)
+
+                connection.execute(
+                    """
+                    UPDATE login_rate_limits
+                    SET attempt_count = attempt_count + 1
+                    WHERE client_key = ?
+                    """,
+                    (client_key,),
+                )
+            else:
+                connection.execute(
+                    """
+                    INSERT INTO login_rate_limits (
+                        client_key, attempt_count, expires_at
+                    )
+                    VALUES (?, ?, ?)
+                    """,
+                    (client_key, 1, now + LOGIN_WINDOW_SECONDS),
+                )
+
+    return 0
 
 def save_enquiry(enquiry):
     with closing(sqlite3.connect(DATABASE_PATH)) as connection:
@@ -287,6 +367,23 @@ def admin_login():
     status_code = 200
 
     if request.method == "POST":
+        try:
+            retry_after = reserve_login_attempt(login_client_key())
+        except sqlite3.Error:
+            app.logger.exception("Could not check the login attempt limit.")
+            abort(503, description="Sign-in is temporarily unavailable.")
+
+        if retry_after > 0:
+            return render_template(
+                "admin.html",
+                authenticated=False,
+                csrf_token=admin_csrf_token(),
+                error=(
+                    "Too many sign-in attempts. "
+                    f"Please try again in {retry_after} seconds."
+                ),
+            ), 429, {"Retry-After": str(retry_after)}
+
         password = request.form.get("password", "")
 
         if (
@@ -296,7 +393,6 @@ def admin_login():
                 password,
             )
         ):
-            # Replace the pre-login session with a fresh login state.
             session.clear()
             session.permanent = True
             session["admin_authenticated"] = True

@@ -233,3 +233,73 @@ def test_enquiries_are_paginated_newest_first(admin_client):
     assert first_html.index("Pagination Customer 20") < first_html.index(
         "Pagination Customer 19"
     )
+
+def test_sixth_login_attempt_is_blocked(admin_client, monkeypatch):
+    monkeypatch.setattr(app_module, "time", lambda: 2_000_000_000)
+
+    for _ in range(5):
+        assert sign_in(admin_client, password="wrong").status_code == 401
+
+    # Even the correct password must wait once the limit is reached.
+    response = sign_in(admin_client)
+
+    assert response.status_code == 429
+    assert response.headers["Retry-After"] == "900"
+    assert "Too many sign-in attempts" in response.get_data(as_text=True)
+
+    # Another blocked request must not restart the waiting period.
+    monkeypatch.setattr(app_module, "time", lambda: 2_000_000_060)
+
+    response = sign_in(admin_client)
+
+    assert response.status_code == 429
+    assert response.headers["Retry-After"] == "840"
+    assert admin_client.get("/admin").status_code == 302
+
+
+def test_login_is_allowed_after_limit_expires(admin_client, monkeypatch):
+    monkeypatch.setattr(app_module, "time", lambda: 2_000_000_000)
+
+    for _ in range(5):
+        assert sign_in(admin_client, password="wrong").status_code == 401
+
+    assert sign_in(admin_client).status_code == 429
+
+    # Advance the limiter's clock without waiting in real time.
+    monkeypatch.setattr(app_module, "time", lambda: 2_000_000_900)
+
+    response = sign_in(admin_client)
+
+    assert response.status_code == 302
+    assert response.headers["Location"] == "/admin"
+
+
+def test_new_browser_does_not_reset_limit(admin_client):
+    for _ in range(5):
+        assert sign_in(admin_client, password="wrong").status_code == 401
+
+    other_browser = app_module.app.test_client()
+
+    assert sign_in(other_browser).status_code == 429
+
+
+def test_different_ip_has_its_own_limit(admin_client):
+    admin_client.environ_base["REMOTE_ADDR"] = "192.0.2.10"
+
+    for _ in range(5):
+        assert sign_in(admin_client, password="wrong").status_code == 401
+
+    assert sign_in(admin_client).status_code == 429
+
+    admin_client.environ_base["REMOTE_ADDR"] = "192.0.2.11"
+
+    assert sign_in(admin_client).status_code == 302
+
+
+def test_forwarded_header_does_not_bypass_limit(admin_client):
+    for _ in range(5):
+        assert sign_in(admin_client, password="wrong").status_code == 401
+
+    admin_client.environ_base["HTTP_X_FORWARDED_FOR"] = "198.51.100.25"
+
+    assert sign_in(admin_client).status_code == 429
