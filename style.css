@@ -412,11 +412,25 @@ main > .hero {
     scroll-snap-align: start;
 }
 
+/* Portfolio captions */
 .portfolio-item figcaption {
-    padding-top: 12px;
+    margin-top: 16px;
+    padding: 12px 0 0;
+    border-top: 1px solid rgb(73 55 50 / 25%);
+
+    font-family: var(--font-heading);
+    font-size: clamp(20px, 1.8vw, 25px);
+    font-weight: 400;
+    font-style: normal;
+    line-height: 1.35;
+    letter-spacing: -0.015em;
+
     color: var(--color-text);
-    font-size: 15px;
-    letter-spacing: 0.03em;
+    text-align: left;
+    text-wrap: balance;
+
+    /* Reserve room for two lines, keeping the row consistent. */
+    min-height: 2.7em;
 }
 
 @media (min-width: 600px) {
@@ -1567,4 +1581,272 @@ main .section-title {
         width: min(240px, 100%);
         justify-self: center;
     }
+}
+
+/* Navigation styling */
+.site-header .menu-links > a {
+    color: var(--color-text);
+    text-decoration: none;
+}
+
+/* Desktop navigation */
+@media (min-width: 1024px) {
+    .site-header .menu-links {
+        gap: 36px;
+    }
+
+    .site-header .menu-links > a {
+        position: relative;
+        padding: 10px 0;
+        font-family: var(--font-body);
+        font-size: 12px;
+        font-weight: 500;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+    }
+
+    /* A short accent line appears beneath the link. */
+    .site-header .menu-links > a::after {
+        content: "";
+        position: absolute;
+        right: 0;
+        bottom: 2px;
+        left: 0;
+        height: 1px;
+        background-color: var(--color-accent);
+        transform: scaleX(0);
+        transform-origin: left;
+    }
+
+    .site-header .menu-links > a:hover::after,
+    .site-header .menu-links > a:focus-visible::after {
+        transform: scaleX(1);
+    }
+}
+
+/* Sliding mobile and tablet menu */
+@media (max-width: 1023px) {
+    .site-header.menu-ready nav {
+        background-color: var(--color-background);
+        border-right: 1px solid var(--color-border);
+    }
+
+    .site-header .menu-links {
+        padding: 28px 28px 40px;
+    }
+
+    .site-header .menu-links > a {
+        padding: 24px 0;
+        border-bottom: 1px solid var(--color-border);
+        font-family: var(--font-heading);
+        font-size: clamp(28px, 5vw, 38px);
+        font-weight: 400;
+        line-height: 1.2;
+        letter-spacing: -0.025em;
+    }
+
+    .site-header .menu-arrow {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        width: 38px;
+        height: 38px;
+        border: 1px solid var(--color-border);
+        border-radius: 50%;
+        color: var(--color-accent);
+        font-family: var(--font-body);
+        font-size: 20px;
+    }
+
+    .site-header .menu-contact {
+        padding: 28px;
+        padding-bottom: max(28px, env(safe-area-inset-bottom));
+        background-color: #e2d6ce;
+        border-top: 1px solid var(--color-border);
+    }
+
+    .site-header .menu-contact-title {
+        margin-bottom: 16px;
+        font-family: var(--font-heading);
+        font-size: 25px;
+        line-height: 1.3;
+        letter-spacing: -0.02em;
+    }
+
+    .site-header .menu-follow {
+        font-size: 11px;
+        font-weight: 500;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+    }
+}
+
+/* Replace the previous text underline with the new hover styling. */
+.site-header .menu-links > a:hover > span:first-child {
+    text-decoration: none;
+}
+
+.site-header .menu-links > a:hover,
+.site-header .menu-links > a:focus-visible {
+    color: var(--color-accent);
+}
+
+.site-header .menu-links > a:hover .menu-arrow,
+.site-header .menu-links > a:focus-visible .menu-arrow {
+    background-color: var(--color-accent);
+    border-color: var(--color-accent);
+    color: #ffffff;
+}
+
+/* Gentle transitions for visitors who allow motion. */
+@media (prefers-reduced-motion: no-preference) {
+    .site-header .menu-links > a {
+        transition: color 180ms ease;
+    }
+
+    .site-header .menu-links > a::after {
+        transition: transform 220ms ease;
+    }
+
+    .site-header .menu-arrow {
+        transition:
+            color 180ms ease,
+            background-color 180ms ease,
+            border-color 180ms ease;
+    }
+}
+
+/* Mobile hero: bright portrait above, text over a darker lower area */
+@media (max-width: 599px) {
+    main > .hero {
+        display: grid;
+        place-items: end center;
+        min-height: 760px;
+        padding: 360px 24px 36px;
+        background-color: #302420;
+    }
+
+    .hero .hero-photos {
+        position: absolute;
+        inset: 0;
+        z-index: -2;
+        display: block;
+    }
+
+    .hero .hero-photos img:first-child {
+        display: block;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center top;
+    }
+
+    .hero .hero-photos img:nth-child(2) {
+        display: none;
+    }
+
+    /* Clear at the top, progressively darker behind the text. */
+    .hero::before {
+        display: block;
+        background: linear-gradient(
+            to bottom,
+            rgb(20 12 9 / 0%) 0%,
+            rgb(20 12 9 / 0%) 30%,
+            rgb(20 12 9 / 35%) 45%,
+            rgb(20 12 9 / 80%) 65%,
+            rgb(20 12 9 / 94%) 100%
+        );
+    }
+
+    .hero .hero-content {
+        width: 100%;
+        max-width: 420px;
+        padding: 0;
+    }
+
+    .hero .hero-eyebrow {
+        margin-bottom: 12px;
+        font-size: 11px;
+    }
+
+    .hero h1 {
+        margin-bottom: 20px;
+        font-size: clamp(38px, 10vw, 48px);
+    }
+
+    .hero .hero-description {
+        margin-bottom: 24px;
+        font-size: 16px;
+        line-height: 1.6;
+    }
+
+    .hero .hero-actions {
+        gap: 16px;
+    }
+}
+
+/* Compact header on phones */
+@media (max-width: 599px) {
+    .site-header {
+        padding: 10px 16px;
+    }
+
+    .site-header .brand {
+        width: min(190px, 100%);
+    }
+
+    .site-header .brand-logo {
+        display: block;
+        width: 100%;
+        height: auto;
+    }
+}
+
+/* Stronger, more readable paragraph text */
+.service-stack .service-item > p,
+.about-copy > p:not(.section-eyebrow),
+.contact-info > p:not(.section-eyebrow),
+.business-contact p,
+.business-location address,
+.contact-form-panel p {
+    color: var(--color-text);
+}
+
+/* Main descriptive paragraphs */
+.service-stack .service-item > p,
+.about-copy > p:not(.section-eyebrow):not(.about-signature),
+.contact-info > p:not(.section-eyebrow) {
+    font-weight: 500;
+}
+
+/* Comfortable reading size for About and Contact */
+.about-copy > p:not(.section-eyebrow):not(.about-signature),
+.contact-info > p:not(.section-eyebrow) {
+    font-size: clamp(17px, 1.4vw, 19px);
+    line-height: 1.75;
+}
+
+.about-copy > p.about-signature {
+    margin-top: 28px;
+    padding-left: 20px;
+    border-left: 2px solid var(--color-accent);
+
+    font-family: var(--font-heading);
+    font-size: clamp(22px, 2vw, 26px);
+    font-weight: 700;
+    font-style: italic;
+    line-height: 1.5;
+    color: var(--color-text);
+}
+
+/* Editorial typography for descriptive paragraphs */
+.hero .hero-description,
+.service-stack .service-item > p,
+.about-copy > p:not(.section-eyebrow):not(.about-signature),
+.contact-info > p:not(.section-eyebrow) {
+    font-family: Georgia, "Times New Roman", serif;
+    font-weight: 400;
+    letter-spacing: 0;
+    line-height: 1.75;
 }
