@@ -159,9 +159,9 @@
             <p>No enquiries yet. New enquiries will appear here.</p>
         {% endfor %}
 
-        {% if total_pages > 1 %}
+        {% if total_pages is gt(1) %}
             <nav class="pagination" aria-label="Enquiry pages">
-                {% if page > 1 %}
+                {% if page is gt(1) %}
                     <a href="{{ url_for('admin_home', page=page - 1) }}">
                         Previous
                     </a>
@@ -169,7 +169,7 @@
 
                 <span>Page {{ page }} of {{ total_pages }}</span>
 
-                {% if page < total_pages %}
+                {% if page is lt(total_pages) %}
                     <a href="{{ url_for('admin_home', page=page + 1) }}">
                         Next
                     </a>
