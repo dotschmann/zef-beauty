@@ -28,8 +28,13 @@
     </button>
 
     <a href="index.html" class="brand">
-        <span class="brand-name">Zef Beauty</span>
-        <span class="brand-tagline">Hair & Makeup</span>
+        <img
+                class="brand-logo"
+                src="images/zef-beauty-logo.png"
+                alt="Zef Beauty | Hair & Makeup"
+                width="2172"
+                height="724"
+            >
     </a>
 
     <nav id="mainNavigation" aria-label="Main navigation">
@@ -111,11 +116,16 @@
             <div class="hero-content">
                 <p class="hero-eyebrow">Zef Beauty · Hair & Makeup</p>
 
-                <h1>Your beauty, your way.</h1>
+                <h1>
+                    Your beauty,
+                    <span class="hero-heading-accent">your way.</span>
+                </h1>
 
                 <p class="hero-description">
                     Hair and makeup for your special moments.
-                    Explore our work and share your vision with us.
+                    <span class="hero-description-line">
+                        A look that feels like you.
+                    </span>
                 </p>
 
                 <div class="hero-actions">
@@ -126,43 +136,133 @@
                 </div>
             </div>
         </section>
+        <div class="beauty-ribbon">
+            <div class="beauty-ribbon-window">
+                <div class="beauty-ribbon-track">
+                    <div class="beauty-ribbon-group">
+                        <span>Hair styling</span>
+                        <span aria-hidden="true">✦</span>
+                        <span>Makeup artistry</span>
+                        <span aria-hidden="true">✦</span>
+                        <span>Bridal beauty</span>
+                        <span aria-hidden="true">✦</span>
+                    </div>
 
+                    <!-- A duplicate makes the movement loop continuously. -->
+                    <div class="beauty-ribbon-group" aria-hidden="true">
+                        <span>Hair styling</span>
+                        <span>✦</span>
+                        <span>Makeup artistry</span>
+                        <span>✦</span>
+                        <span>Bridal beauty</span>
+                        <span>✦</span>
+                    </div>
+                </div>
+            </div>
+
+            <button
+                class="beauty-ribbon-toggle"
+                type="button"
+                aria-label="Pause moving text"
+                hidden
+            >
+                Pause
+            </button>
+        </div>
         <section id="services">
-            <h2>Our Services</h2>
-            <div class="service-list">
+            <p class="services-eyebrow">The Zef Beauty experience</p>
+            <h2 class="section-title">Beauty for <span class="title-accent">your moment.</span></h2>
+
+            <div class="service-list service-stack">
                 <div class="service-item">
-                    <h3>Hair Styling</h3>
+                    <span class="service-number" aria-hidden="true">01</span>
+
+                    <h3>Hair styling</h3>
+
                     <p>
-                        Professional hair styling for weddings, events, 
+                        Professional styling for weddings, events,
                         and special occasions.
                     </p>
-                    <a href="#contact" class="service-link" data-service="hair">
-                        Enquire about hair styling
+
+                    <a
+                        href="#contact"
+                        class="service-link"
+                        data-service="hair"
+                    >
+                        <span>Enquire about hair</span>
+                        <span class="service-arrow" aria-hidden="true">↗</span>
                     </a>
+                    <div class="service-photo">
+                        <img
+                            src="images/hairstyle-look-02.png"
+                            alt="Long, straight hairstyle with a centre part"
+                            loading="lazy"
+                        >
+                    </div>
                 </div>
+
                 <div class="service-item">
-                    <h3>Makeup Artistry</h3>
+                    <span class="service-number" aria-hidden="true">02</span>
+
+                    <h3>Makeup artistry</h3>
+
                     <p>
-                        Expert makeup services to enhance your natural beauty.</p>
-                    <a href="#contact" class="service-link" data-service="makeup">
-                        Enquire about makeup 
-                    </a>
-                </div>
-                <div class="service-item">
-                    <h3>Bridal Packages</h3>
-                    <p>
-                        Comprehensive bridal packages to make your special day unforgettable.
+                        Makeup that enhances your features and
+                        brings your chosen look to life.
                     </p>
-                    <a href="#contact" class="service-link" data-service="bridal">
-                        Enquire about bridal packages
+
+                    <a
+                        href="#contact"
+                        class="service-link"
+                        data-service="makeup"
+                    >
+                        <span>Enquire about makeup</span>
+                        <span class="service-arrow" aria-hidden="true">↗</span>
                     </a>
+                    <div class="service-photo">
+                        <img
+                            src="images/traditional-engagement-02.png"
+                            alt="Makeup look on a client wearing an orange dress"
+                            loading="lazy"
+                        >
+                    </div>
+                </div>
+
+                <div class="service-item">
+                    <span class="service-number" aria-hidden="true">03</span>
+
+                    <h3>Bridal beauty</h3>
+
+                    <p>
+                        Hair and makeup for your wedding day,
+                        shaped around your personal style.
+                    </p>
+
+                    <a
+                        href="#contact"
+                        class="service-link"
+                        data-service="bridal"
+                    >
+                        <span>Enquire about bridal</span>
+                        <span class="service-arrow" aria-hidden="true">↗</span>
+                    </a>
+                    <div class="service-photo">
+                        <img
+                            src="images/bridal-package-02.png"
+                            alt="Bridal makeup with an updo and tiara"
+                            loading="lazy"
+                        >
+                    </div>
                 </div>
             </div>
         </section>
 
         <section id="portfolio">
             <div class="portfolio-heading">
-                <h2>Our work</h2>
+                <div class="portfolio-intro">
+                    <p class="section-eyebrow">The portfolio</p>
+                    <h2 class="section-title">Our <span class="title-accent">work.</span></h2>
+                </div>
 
                 <div
                     class="carousel-controls"
@@ -170,6 +270,14 @@
                     aria-label="Portfolio navigation"
                     hidden
                 >
+                    <button
+                        type="button"
+                        class="carousel-button portfolio-toggle"
+                        id="portfolioToggle"
+                        aria-controls="portfolioTrack"
+                    >
+                    Pause
+                    </button>
                     <button
                         type="button"
                         class="carousel-button"
@@ -272,7 +380,7 @@
         <section id="about" class="about-section">
             <div class="about-image">
                 <img
-                    src="images/traditional-engagement-02.png"
+                    src="images/about-pic-01.png"
                     alt="Bridal makeup look from Zef Beauty's portfolio"
                     loading="lazy"
                 >
@@ -281,7 +389,7 @@
             <div class="about-copy">
                 <p class="section-eyebrow">Meet Zef Beauty</p>
 
-                <h2>Beauty with a personal touch.</h2>
+                <h2 class="section-title">Beauty with a <span class="title-accent">personal touch.</span></h2>
 
                 <p>
                     From hair styling to makeup, we help you create
@@ -300,7 +408,7 @@
         <section id="contact" class="contact-section">
             <div class="contact-info">
                 <p class="section-eyebrow">Get in touch</p>
-                <h2>Let's talk about your look.</h2>
+                <h2 class="section-title">Let’s talk about <span class="title-accent">your look.</span></h2>
                 <p>
                     Tell us about your occasion and the service
                     you have in mind.
