@@ -254,7 +254,6 @@ headerObserver.observe(siteHeader);
     const speed = 30; // Pixels per second.
 
     let paused = false;
-    let hovering = false;
     let visible = false;
     let looping = false;
     let distance = 0;
@@ -272,7 +271,6 @@ headerObserver.observe(siteHeader);
 
             copy.setAttribute('data-portfolio-copy', '');
             copy.setAttribute('aria-hidden', 'true');
-            copy.inert = true;
 
             // Avoid duplicate HTML IDs.
             copy.removeAttribute('id');
@@ -370,27 +368,70 @@ headerObserver.observe(siteHeader);
         setPaused(!paused);
     });
 
-    // Temporarily stop while a mouse is over a photograph.
-    track.addEventListener('pointerenter', function (event) {
-        if (event.pointerType === 'mouse') hovering = true;
-    });
+    // Track the gesture without pausing when a finger touches the screen.
+    let photoGesture = null;
 
-    track.addEventListener('pointerleave', function () {
-        hovering = false;
-    });
+    track.addEventListener('pointerdown', function (event) {
+        photoGesture = null;
 
-    // Manual browsing pauses automatic movement until Play is pressed.
-    track.addEventListener('pointerdown', function () {
-        setPaused(true);
-    });
+        if (!event.isPrimary || event.button !== 0) return;
+        if (!event.target.closest('.portfolio-item img')) return;
 
-    track.addEventListener('wheel', function () {
-        setPaused(true);
+        photoGesture = {
+            pointerId: event.pointerId,
+            x: event.clientX,
+            y: event.clientY,
+            moved: false
+        };
     }, { passive: true });
 
-    section.addEventListener('focusin', function (event) {
-        if (event.target !== toggle) setPaused(true);
+    // A swipe or drag must not count as a tap.
+    track.addEventListener('pointermove', function (event) {
+        if (!photoGesture) return;
+        if (event.pointerId !== photoGesture.pointerId) return;
+
+        const distance = Math.hypot(
+            event.clientX - photoGesture.x,
+            event.clientY - photoGesture.y
+        );
+
+        if (distance > 10) {
+            photoGesture.moved = true;
+        }
+    }, { passive: true });
+
+    // Browsers cancel the pointer gesture when touch scrolling takes over.
+    track.addEventListener('pointercancel', function () {
+        photoGesture = null;
     });
+
+    // Pause only after a deliberate click or tap on a photograph.
+    track.addEventListener('click', function (event) {
+        const gesture = photoGesture;
+        photoGesture = null;
+
+        if (!gesture || gesture.moved) return;
+        if (!event.target.closest('.portfolio-item img')) return;
+
+        const distance = Math.hypot(
+            event.clientX - gesture.x,
+            event.clientY - gesture.y
+        );
+
+        if (distance <= 10) {
+            setPaused(true);
+        }
+    });
+
+// Keep keyboard navigation usable without pausing on touch focus.
+section.addEventListener('focusin', function (event) {
+    if (
+        event.target !== toggle &&
+        event.target.matches(':focus-visible')
+    ) {
+        setPaused(true);
+    }
+});
 
     // Only animate while the gallery is on screen.
     const visibilityObserver = new IntersectionObserver(function (entries) {
@@ -403,7 +444,6 @@ headerObserver.observe(siteHeader);
         const canMove =
             looping &&
             !paused &&
-            !hovering &&
             visible &&
             !document.hidden;
 
