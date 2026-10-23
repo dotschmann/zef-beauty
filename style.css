@@ -809,7 +809,7 @@ body.menu-locked {
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        gap: 5px;
+        gap: 7px;
         grid-column: 1;
         grid-row: 1;
         width: 44px;
@@ -824,7 +824,7 @@ body.menu-locked {
     .menu-line {
         display: block;
         width: 24px;
-        height: 1px;
+        height: 2px;
         background-color: currentColor;
         transform-origin: center;
         transition:
@@ -838,7 +838,7 @@ body.menu-locked {
     }
 
     .menu-open .menu-line:nth-child(1) {
-        transform: translateY(6px) rotate(45deg);
+        transform: translateY(9px) rotate(45deg);
     }
 
     .menu-open .menu-line:nth-child(2) {
@@ -847,7 +847,7 @@ body.menu-locked {
     }
 
     .menu-open .menu-line:nth-child(3) {
-        transform: translateY(-6px) rotate(-45deg);
+        transform: translateY(-9px) rotate(-45deg);
     }
 
     /* Navigation stays usable before JavaScript loads */
@@ -1861,3 +1861,46 @@ main .section-title {
     line-height: 1.75;
 }
 
+/* Hamburger lines rock like seesaws */
+@media (max-width: 1023px) and (prefers-reduced-motion: no-preference) {
+
+    .menu-toggle .menu-line:nth-child(1) {
+        --tilt-start: 14deg;
+        --tilt-end: -14deg;
+    }
+
+    .menu-toggle .menu-line:nth-child(2) {
+        --tilt-start: -8deg;
+        --tilt-end: 8deg;
+    }
+
+    .menu-toggle .menu-line:nth-child(3) {
+        --tilt-start: -14deg;
+        --tilt-end: 14deg;
+    }
+
+    .site-header.menu-ready:not(.menu-open):not(.menu-resizing)
+    .menu-toggle[aria-expanded="false"]:not(:focus-visible)
+    .menu-line {
+        transform-origin: center;
+        animation: hamburger-seesaw 5s ease-in-out infinite;
+    }
+}
+
+@keyframes hamburger-seesaw {
+    0%, 55%, 100% {
+        rotate: 0deg;
+    }
+
+    65% {
+        rotate: var(--tilt-start);
+    }
+
+    78% {
+        rotate: var(--tilt-end);
+    }
+
+    90% {
+        rotate: 0deg;
+    }
+}
