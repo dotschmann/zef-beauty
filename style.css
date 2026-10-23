@@ -982,30 +982,39 @@ body.menu-locked {
     text-underline-offset: 6px;
 }
 
-
-/* Elements prepared by JavaScript for a one-time scroll reveal. */
+/* Directional scroll reveals */
 .reveal-pending {
+    --reveal-x: 0px;
+
     opacity: 0;
-    transform: translateY(20px);
+    transform: translateX(var(--reveal-x));
+
     transition:
-        opacity 650ms ease,
-        transform 650ms cubic-bezier(0.22, 1, 0.36, 1);
-    transition-delay: var(--reveal-delay, 0ms);
+        opacity 700ms ease,
+        transform 700ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.reveal-pending[data-reveal="left"] {
+    --reveal-x: -20px;
+}
+
+.reveal-pending[data-reveal="right"] {
+    --reveal-x: 20px;
 }
 
 .reveal-pending.reveal-visible {
     opacity: 1;
-    transform: translateY(0);
+    transform: none;
 }
 
-/* Keep content immediately visible when reached by keyboard. */
+/* Show content immediately when someone tabs into it. */
 .reveal-pending:focus-within {
     opacity: 1;
     transform: none;
     transition: none;
 }
 
-/* Follow the visitor's device accessibility preference. */
+/* Honour reduced-motion settings. */
 @media (prefers-reduced-motion: reduce) {
     .reveal-pending {
         opacity: 1;
@@ -1013,6 +1022,7 @@ body.menu-locked {
         transition: none;
     }
 }
+
 
 /* Moving service strip */
 .beauty-ribbon {
@@ -1850,3 +1860,4 @@ main .section-title {
     letter-spacing: 0;
     line-height: 1.75;
 }
+

@@ -436,8 +436,7 @@ headerObserver.observe(siteHeader);
     requestAnimationFrame(animate);
 })();
 
-
-// Reveal selected content once when it enters the viewport.
+// Fade content in from its side of the layout.
 (function initialiseScrollReveals() {
     const motionPreference = window.matchMedia(
         '(prefers-reduced-motion: reduce)'
@@ -450,54 +449,84 @@ headerObserver.observe(siteHeader);
         return;
     }
 
-    const revealElements = document.querySelectorAll(
-        '#services > h2, ' +
-        '.portfolio-heading, ' +
-        '.about-image, ' +
-        '.about-copy, ' +
-        '#contact h2'
+    const groups = [
+        {
+            direction: 'left',
+            selector: [
+                '#services > .services-eyebrow',
+                '#services > h2',
+                '.service-stack .service-number',
+                '.service-stack h3',
+                '.service-stack .service-item > p',
+                '.service-stack .service-link',
+                '.portfolio-heading',
+                '.about-image',
+                '.contact-info > .section-eyebrow',
+                '.contact-info > h2',
+                '.contact-info > p:not(.section-eyebrow)',
+                '.business-contact',
+                '.business-location'
+            ].join(', ')
+        },
+        {
+            direction: 'right',
+            selector: [
+                '.service-stack .service-photo',
+                '.about-copy',
+                '.contact-form-panel'
+            ].join(', ')
+        }
+    ];
+
+    groups.forEach(function (group) {
+        document.querySelectorAll(group.selector).forEach(
+            function (element) {
+                element.dataset.reveal = group.direction;
+            }
+        );
+    });
+
+    const elements = document.querySelectorAll(
+        'main [data-reveal]'
     );
 
-    const revealObserver = new IntersectionObserver(
+    const observer = new IntersectionObserver(
         function (entries) {
             entries.forEach(function (entry) {
-                if (!entry.isIntersecting) {
-                    return;
-                }
+                if (!entry.isIntersecting) return;
 
                 entry.target.classList.add('reveal-visible');
-                revealObserver.unobserve(entry.target);
+                observer.unobserve(entry.target);
             });
         },
         {
-            threshold: 0.1
+            threshold: 0.08
         }
     );
 
-    revealElements.forEach(function (element) {
+    elements.forEach(function (element) {
         element.classList.add('reveal-pending');
-        revealObserver.observe(element);
+        observer.observe(element);
     });
 
-    // Reveal a block immediately if someone tabs into it.
+    // Reveal every containing block when a link or input receives focus.
     document.addEventListener('focusin', function (event) {
-        const block = event.target.closest('.reveal-pending');
-
-        if (block) {
-            block.classList.add('reveal-visible');
-            revealObserver.unobserve(block);
-        }
+        elements.forEach(function (element) {
+            if (element.contains(event.target)) {
+                element.classList.add('reveal-visible');
+                observer.unobserve(element);
+            }
+        });
     });
 
-    // Stop hiding or animating content if the preference changes.
     motionPreference.addEventListener('change', function (event) {
-        if (event.matches) {
-            revealObserver.disconnect();
+        if (!event.matches) return;
 
-            revealElements.forEach(function (element) {
-                element.classList.add('reveal-visible');
-            });
-        }
+        observer.disconnect();
+
+        elements.forEach(function (element) {
+            element.classList.add('reveal-visible');
+        });
     });
 })();
 
