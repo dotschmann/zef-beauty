@@ -691,5 +691,51 @@
         <p>Hair & Makeup</p>
     </div>
 </footer>
+    <dialog
+        id="photoViewer"
+        class="photo-viewer"
+        aria-label="Enlarged portfolio photographs"
+    >
+        <div class="photo-viewer-content">
+            <div class="photo-viewer-toolbar">
+                <button
+                    type="button"
+                    id="photoViewerPrevious"
+                    class="photo-viewer-nav"
+                    aria-label="Previous photograph"
+                >
+                    &larr; Previous
+                </button>
+
+                <button
+                    type="button"
+                    id="photoViewerNext"
+                    class="photo-viewer-nav"
+                    aria-label="Next photograph"
+                >
+                    Next &rarr;
+                </button>
+
+                <button
+                    type="button"
+                    id="photoViewerClose"
+                    class="photo-viewer-close"
+                    aria-label="Close photographs"
+                    autofocus
+                >
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <figure class="photo-viewer-figure">
+                <img id="photoViewerImage" alt="">
+                <figcaption
+                    id="photoViewerCaption"
+                    aria-live="polite"
+                    aria-atomic="true"
+                ></figcaption>
+            </figure>
+        </div>
+    </dialog>    
 </body>
 </html>
