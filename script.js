@@ -367,6 +367,110 @@ headerObserver.observe(siteHeader);
     toggle.addEventListener('click', function () {
         setPaused(!paused);
     });
+    // Open and browse portfolio photographs above the page.
+    const photoViewer = document.querySelector('#photoViewer');
+    const viewerImage = document.querySelector('#photoViewerImage');
+    const viewerCaption = document.querySelector('#photoViewerCaption');
+    const viewerClose = document.querySelector('#photoViewerClose');
+    const viewerPrevious = document.querySelector('#photoViewerPrevious');
+    const viewerNext = document.querySelector('#photoViewerNext');
+
+    let viewerReturnFocus = track;
+    let currentPhotoIndex = 0;
+
+    // Match every carousel card, including loop copies,
+    // to its position in the original photograph collection.
+    Array.from(track.children).forEach(function (figure, index) {
+        figure.dataset.photoIndex = String(index % photos.length);
+    });
+
+    function showPortfolioPhoto(index) {
+        // Wrap from the last photo to the first, and vice versa.
+        currentPhotoIndex =
+            (index + photos.length) % photos.length;
+
+        const figure = photos[currentPhotoIndex];
+        const image = figure.querySelector('img');
+        const caption = figure.querySelector('figcaption');
+
+        viewerImage.src = image.currentSrc || image.src;
+        viewerImage.alt = image.alt;
+
+        const title = caption?.textContent.trim() || 'Portfolio photograph';
+
+        viewerCaption.textContent =
+            `${title} · ${currentPhotoIndex + 1} / ${photos.length}`;
+    }
+
+    function openPortfolioPhoto(image) {
+        if (photoViewer.open) return;
+
+        setPaused(true);
+
+        const figure = image.closest('.portfolio-item');
+
+        viewerReturnFocus = figure.hasAttribute('data-portfolio-copy')
+            ? track
+            : image;
+
+        showPortfolioPhoto(Number(figure.dataset.photoIndex));
+
+        photoViewer.showModal();
+        document.body.classList.add('photo-viewer-open');
+    }
+
+    viewerPrevious.addEventListener('click', function () {
+        showPortfolioPhoto(currentPhotoIndex - 1);
+    });
+
+    viewerNext.addEventListener('click', function () {
+        showPortfolioPhoto(currentPhotoIndex + 1);
+    });
+
+    viewerClose.addEventListener('click', function () {
+        photoViewer.close();
+    });
+
+    // Arrow keys browse while the lightbox is open.
+    // Escape retains the dialog's built-in close behaviour.
+    photoViewer.addEventListener('keydown', function (event) {
+        if (event.key === 'ArrowLeft') {
+            event.preventDefault();
+            showPortfolioPhoto(currentPhotoIndex - 1);
+        } else if (event.key === 'ArrowRight') {
+            event.preventDefault();
+            showPortfolioPhoto(currentPhotoIndex + 1);
+        }
+    });
+
+    photoViewer.addEventListener('close', function () {
+        document.body.classList.remove('photo-viewer-open');
+        viewerReturnFocus.focus({ preventScroll: true });
+    });
+
+    // Allow keyboard users to open the original photographs.
+    photos.forEach(function (figure) {
+        const image = figure.querySelector('img');
+        const caption = figure.querySelector('figcaption');
+
+        if (!image) return;
+
+        image.tabIndex = 0;
+        image.setAttribute('role', 'button');
+        image.setAttribute('aria-haspopup', 'dialog');
+        image.setAttribute('aria-controls', 'photoViewer');
+        image.setAttribute(
+            'aria-label',
+            `Enlarge ${caption?.textContent.trim() || 'portfolio photograph'}`
+        );
+
+        image.addEventListener('keydown', function (event) {
+            if (event.key === 'Enter' || event.key === ' ') {
+                event.preventDefault();
+                openPortfolioPhoto(image);
+            }
+        });
+    });
 
     // Track the gesture without pausing when a finger touches the screen.
     let photoGesture = null;
@@ -419,7 +523,8 @@ headerObserver.observe(siteHeader);
         );
 
         if (distance <= 10) {
-            setPaused(true);
+            const image = event.target.closest('.portfolio-item img');
+            openPortfolioPhoto(image);
         }
     });
 
