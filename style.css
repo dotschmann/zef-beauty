@@ -1073,9 +1073,8 @@ body.menu-locked {
     }
 }
 
-.beauty-ribbon.is-paused .beauty-ribbon-group,
-.beauty-ribbon:hover .beauty-ribbon-group,
-.beauty-ribbon:focus-within .beauty-ribbon-group {
+/* Only the Play/Pause button controls pausing. */
+.beauty-ribbon.is-paused .beauty-ribbon-group {
     animation-play-state: paused;
 }
 
